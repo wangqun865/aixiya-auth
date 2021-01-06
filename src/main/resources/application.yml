@@ -1,0 +1,151 @@
+server:
+  port: 8201
+spring:
+  kafka:
+    bootstrap-servers: # yours
+    producer:
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  zipkin:
+    sender:
+      type: kafka
+  sleuth:
+    sampler:
+      probability: 1
+  datasource:
+    dynamic:
+      hikari:
+        connection-timeout: 30000
+        max-lifetime: 1800000
+        max-pool-size: 15
+        min-idle: 5
+        connection-test-query: select 1
+        pool-name: FebsHikariCP
+      primary: base
+      datasource:
+        base:
+          username: # yours
+          password: # yours
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://# yours?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    database: 0
+    host: # yours
+    port: 6379
+    lettuce:
+      pool:
+        min-idle: 8
+        max-idle: 500
+        max-active: 2000
+        max-wait: 8s
+    timeout: 10s
+mybatis-plus:
+  type-aliases-package: com.aixiya.platform.backend.framework.common.entity.system
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    jdbc-type-for-null: null
+  global-config:
+    banner: false
+info:
+  app:
+    name: ${spring.application.name}
+    description: "@project.description@"
+    version: "@project.version@"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+justauth:
+  enabled: true
+  type:
+    github:
+      client-id:
+      client-secret:
+      redirect-uri:
+    gitee:
+      client-id:
+      client-secret:
+      redirect-uri:
+    tencent_cloud:
+      client-id:
+      client-secret:
+      redirect-uri:
+    dingtalk:
+      client-id:
+      client-secret:
+      redirect-uri:
+    qq:
+      client-id:
+      client-secret:
+      redirect-uri:
+    microsoft:
+      client-id:
+      client-secret:
+      redirect-uri:
+  cache:
+    type: redis
+    prefix: 'FEBS::CLOUD::SOCIAL::STATE::'
+    timeout: 1h
+aixiya:
+  platform:
+    security:
+      enable: true
+      only-fetch-by-gateway: false
+      anon-uris: /actuator/**,/captcha,/social/**,/v2/api-docs,/v2/api-docs-ext,/login,/resource/**,/public/**,/oauth/token
+    log:
+      filter:
+        enable: true
+        annoUrlPatterns: /captcha
+      console:
+        enable: true
+      kafka:
+        bootstrap-servers: # yours
+      audit:
+        enable: true
+jwt:
+  token-header: Authorization
+  expire: 31536000
+  rsa-secret: wq1WET98^%3^(WE46
+client:
+  id: aixiya-sso
+  secret: 0209@wq
+  token-header: x-client-token
+  expire: 3
+  rsa-secret: x2318^^(*WAIXIYAAR(WQ&T
+sso:
+  code:
+    expire: 300
+    ## 5分钟
+  jwt:
+    expire: 14400
+    ## 4小时
+    renewal: 7200
+    ##同refresh token时间 2h
+    refreshTokenExpire: 7200
+    #刷新和创建token写入reids的时间
+ribbon:
+  ConnectTimeout: 10000
+  ReadTimeout: 10000
+feign:
+  hystrix:
+    enabled: true
+hystrix:
+  shareSecurityContext: true
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 33000
+logging:
+  config: classpath:aixiya-logback.xml

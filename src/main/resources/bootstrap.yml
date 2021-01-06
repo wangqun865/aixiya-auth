@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: auth-center
+  profiles:
+    active: local
+  thymeleaf:
+    cache: false
+  main:
+    allow-bean-definition-overriding: true
